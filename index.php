@@ -1,5 +1,18 @@
 <?php
-ob_start();
+$mysql_hostname = "mysql15.000webhost.com";
+    $mysql_user = "a6204434_bikram";
+    $mysql_password ="bikram";
+    $mysql_database ="a6204434_laundry";
+    
+    $connection = mysqli_connect($mysql_hostname, $mysql_user, $mysql_password,$mysql_database) or die("Could not connect database");
+    if(isset($_GET['key'])){
+	$key = $_GET['key'];
+	$query = "SELECT * FROM auth WHERE pass='".$key."'";
+	$result = mysqli_query($connection,$query);
+	$rows = mysqli_num_rows($result); 
+	if($rows<1) header("location:registration.php?badkey=true");
+	}
+	else header("location:registration.php");
 ?>
 <!DOCTYPE html>
 <head>

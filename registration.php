@@ -315,6 +315,8 @@ function validate_all(output) {
 </script>
 </head>
 <body>
+<h1>Please Register If you wish to get key for the usage of Api</h1>
+
 <form action="user.php" method="post" id="form" onsubmit="return validate_all('results');">
 
     <table cellspacing="10">
@@ -333,7 +335,11 @@ function validate_all(output) {
     </table>
 
     <h3 id="results"></h3>
-
-</form>
+<?php 
+if(isset($_GET['badkey']))
+echo'<font color="red">Incorrect Api key Used.</font>Please Register to get a new Key.
+';
+	?>
+	</form>
 </body>
 </html>

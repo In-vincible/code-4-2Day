@@ -17,39 +17,40 @@ if(isset($_POST['user']) && isset($_POST['pass'])){
  $gender = $_POST['gender'];
  $password = salt($password);
  //Query for inserting user data to database.
- //$query = "INSERT INTO `auth`(`user`, `pass`, `email`, `gender`) VALUES ('".$user."','".$password."','".$email."','".$gender."')";
+ $query = "INSERT INTO `auth`(`user`, `pass`, `email`, `gender`) VALUES ('".$user."','".$password."','".$email."','".$gender."')";
  
- $query = "SELECT * FROM auth WHERE user='".$user."'";
+// $query = "SELECT * FROM auth WHERE user='".$user."'";
  
  
  
  
  $result = mysqli_query($connection,$query);
- $rows = mysqli_num_rows($result); 
+ /*$rows = mysqli_num_rows($result); 
  while($rows--){
 	 $m = mysqli_fetch_assoc($result);
 	 echo "Id = ".$m['id']."<br>pass=".$m['pass']."<br><br>";
  }
+ */
  echo mysqli_error($connection);
-/*
+
  $user_id = mysqli_insert_id($connection); 
  //creating session for use in welcome page.(I will user encrypted pass as key of user.)
                 $_SESSION['id'] = $user_id;
     			$_SESSION['user'] = $user;
-    			
+    			$_SESSION['key'] = $password;
 				session_write_close();
 //sending mail(key and welcome message) to the registered user.
 				$subject = "Your very own Football Api";
                 $txt = "Hello".$user."!!! \nWelcome to the World of FootBall.\nyour api key: ".$password;
-               // $headers = "From: bikram.bharti.ece15@itbhu.ac.in" . "\r\n" .
+                $headers = "From: bikram.bharti.ece15@itbhu.ac.in" . "\r\n" .
                   "CC: bikram.bharti99@gmail.com";
 
-                mail($email,$subject,$txt);
-				echo $user_id."    ".$password;
+                mail($email,$subject,$txt,$headers);
+				//echo $user_id."    ".$password;
 				
-				//header("location:welcome.php");
-				//exit();
-*/
+				header("location:welcome.php");
+				exit();
+
 }
 else header("location:registration.php");
 //salt function for encryption of password
