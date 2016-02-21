@@ -315,11 +315,11 @@ function validate_all(output) {
 </script>
 </head>
 <body>
-<form action="index.php" method="post" id="form" onsubmit="return validate_all('results');">
+<form action="user.php" method="post" id="form" onsubmit="return validate_all('results');">
 
     <table cellspacing="10">
 
-        <tr><td>Login</td><td><input type="text" name="login" maxlength="25" id="login" onKeyUp="updatelength('login', 'login_length')"><br /><div id="login_length"></div> </td></tr>
+        <tr><td>User Name</td><td><input type="text" name="user" maxlength="25" id="login" onKeyUp="updatelength('login', 'login_length')"><br /><div id="login_length"></div> </td></tr>
 
         <tr><td>Password</td><td><input type="password" name="pass" maxlength="25" id="password" onKeyUp="updatelength('password', 'pass_length')"><div id="pass_result"></div><br /><div id="pass_length"></div></td></tr>
 
