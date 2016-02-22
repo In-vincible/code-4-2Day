@@ -44,3 +44,43 @@ function fixture(jsLink){
 		});*/
 	});
 }
+
+function check(token,table,fixtures){
+	var jService = "http://api.football-data.org/v1/soccerseasons/?season=2015";
+	theAjax(jService)
+	.done(function(response){
+		
+		$.each(response,function(index,value){
+			//console.log(value.caption);
+			//e = JSON.stringify(response);
+			//document.write(e);
+            
+		   var match = FuzzySet();
+		   match.add(value.caption);
+		   var result = match.get(token);
+		   if(result[0][0]>0.8){ 
+		  // document.write(result[0][1] + " " + result[0][0]+ "<br>");
+		   /*
+		   if(table) leagueT(value._links.leagueTable.href);
+		   else if(fixtures) fixture(value._links.fixtures.href);
+		   else teamList(value._links.teams.href);
+           */
+		   var url="";
+		   if(table) url = value._links.leagueTable.href;
+		   else if(fixtures) url = value._links.fixtures.href;
+           else url = value._links.teams.href;
+           urlHandler(url);		   
+		       
+		      /* if(table) url= value._links.leagueTable.href;
+			   else if(fixtures) url= value._links.fixtures.href;
+			   else url= value._links.teams.href; 
+		   	window.location.href = "process.php?url="+url;
+			*/
+		   		   
+		   }
+		   
+		});
+		
+	});
+		
+}

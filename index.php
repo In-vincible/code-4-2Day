@@ -26,44 +26,38 @@ $mysql_hostname = "mysql15.000webhost.com";
 <script src="fuzzyset.js"></script>
 <script>
 
-function check(token,table,fixtures){
+function check(token,table,fixtures,topn){
+	
 	var jService = "http://api.football-data.org/v1/soccerseasons/?season=2015";
+	if(token==' 2015/16'){
+		custHandler(topn);
+	}
+	else{
 	theAjax(jService)
 	.done(function(response){
 		
-		$.each(response,function(index,value){
-			//console.log(value.caption);
-			//e = JSON.stringify(response);
-			//document.write(e);
-            
-		   var match = FuzzySet();
-		   match.add(value.caption);
-		   var result = match.get(token);
-		   if(result[0][0]>0.8){ 
-		  // document.write(result[0][1] + " " + result[0][0]+ "<br>");
-		   /*
-		   if(table) leagueT(value._links.leagueTable.href);
-		   else if(fixtures) fixture(value._links.fixtures.href);
-		   else teamList(value._links.teams.href);
-           */
+		$.each(response,function(index,value){ 
+		   if(matcher(value.caption,token)){
 		   var url="";
+		   if(!topn){
 		   if(table) url = value._links.leagueTable.href;
 		   else if(fixtures) url = value._links.fixtures.href;
            else url = value._links.teams.href;
-           urlHandler(url);		   
-		       
-		      /* if(table) url= value._links.leagueTable.href;
-			   else if(fixtures) url= value._links.fixtures.href;
-			   else url= value._links.teams.href; 
-		   	window.location.href = "process.php?url="+url;
-			*/
-		   		   
+		   urlHandler(url);		   
 		   }
-		   
+		   else custHandler(topn,value.caption,value._links.leagueTable.href);
+		   }
 		});
 		
 	});
-		
+	}	
+}
+function matcher(text1,text2){
+	var match = FuzzySet();
+    match.add(text1);
+	var result = match.get(text2);
+	if(result[0][0]>0.8) return true;
+	return false;
 }
 function theAjax(uri){
  return $.ajax({
@@ -76,49 +70,77 @@ function theAjax(uri){
 function urlHandler(jsLink){
 	 theAjax(jsLink)
 	 .done(function(response){
-		/* var data = JSON.stringify(response);
-		 $.when($('#dataHolder').html(data)).done(function(){
-			 $('#dataMedium').trigger("submit");
-		 });*/
-	 jSonHandler(response);
+		jSonHandler(response);
 	 });
-	 }
+}
 function jSonHandler(data){
 	var Data = JSON.stringify(data);
-	$.when($('#dataHolder').html(Data)).done(function(){
+	document.write(Data);
+	/*$.when($('#dataHolder').html(Data)).done(function(){
 			 $('#dataMedium').trigger("submit");
-		 });
-    }
-function custHandler(season,topn){
+	});*/
+}
+function teamExtractor(topn,link){
+	
+} 	
+function custHandler(topn,season,link){
+	var jSonData = [];
+	
 	if(season==undefined){
-		var jSonData = [];
+		
+		
 		var jService = "http://api.football-data.org/v1/soccerseasons/?season=2015";
 		theAjax(jService)
 		.done(function(response){
 			$.each(response,function(index,value){
-				var Season = {"season":value.caption};
-				var teams = [];
-				Season.teams = teams;
+				var Season = {};
+				Season.season = value.caption;
+				Season.teams = [];
 				theAjax(value._links.leagueTable.href)
 				.done(function(Response){
+					
+				
+				    
 					$.each(Response.standing,function(Index,Value){
 						Season.teams.push(Value);
 						if(Index==topn) return false;
 					});
+			    
 				
 				});
 			jSonData.push(Season);
 			});
+		jSonHandler(jSonData);
 		});
+	}
+	else{
+		var Season = {};
+				Season.season = season;
+				Season.teams = [];
+				
+				teams = [];
+				theAjax(link)
+				.done(function(Response){
+					$.each(Response.standing,function(Index,Value){
+						
+						teams.push(Value);
+						if(Index==topn-1) return false;
+					})
+				
+					Season.teams = teams;
+				});
+			jSonData.push(Season);
 	jSonHandler(jSonData);
 	}
- }
+	
+}
 
 </script>
 
 <?php 
-if(isset($_GET['season'])){
-	$season = $_GET['season'];
+
+	if(isset($_GET['season'])) $season = $_GET['season'];
+	else $season = '';
 	echo'
 	
 	<form id="dataMedium" action="process.php" method="post" style="display:none;">
@@ -129,15 +151,17 @@ if(isset($_GET['season'])){
 	<script>
 	var table = false;
 	var fixtures = false;
+	var topn = false;
 	var season = "' .$season. ' 2015/16";';
     if(isset($_GET['table'])) echo'
 	  table = true;';	
    else if(isset($_GET['fixtures'])) echo 'fixtures=true;';
-	
-	echo"	check(season,table,fixtures);
+   	else if(isset($_GET['topn'])) echo 'topn='.$_GET['topn'].';'; 
+	echo"	check(season,table,fixtures,topn);
 	</script>
 	";
-}
+
+
 //ob_end_clean();
 //echo"only bikram is truth.";
 //require_once "process.php";
