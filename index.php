@@ -75,10 +75,10 @@ function urlHandler(jsLink){
 }
 function jSonHandler(data){
 	var Data = JSON.stringify(data);
-	document.write(Data);
-	/*$.when($('#dataHolder').html(Data)).done(function(){
+	//document.write(Data);
+	$.when($('#dataHolder').html(Data)).done(function(){
 			 $('#dataMedium').trigger("submit");
-	});*/
+	});
 }
 function teamExtractor(topn,link){
 	
@@ -99,38 +99,34 @@ function custHandler(topn,season,link){
 				theAjax(value._links.leagueTable.href)
 				.done(function(Response){
 					
-				
-				    
-					$.each(Response.standing,function(Index,Value){
+			$.each(Response.standing,function(Index,Value){
 						Season.teams.push(Value);
-						if(Index==topn) return false;
-					});
-			    
-				
-				});
+						if(Index==topn-1) return false;
+		    });
 			jSonData.push(Season);
+			if(index==response.length-1) jSonHandler(jSonData);
+				});
 			});
-		jSonHandler(jSonData);
+		
 		});
 	}
 	else{
-		var Season = {};
+		        var Season = {};
 				Season.season = season;
 				Season.teams = [];
 				
-				teams = [];
+				
 				theAjax(link)
 				.done(function(Response){
 					$.each(Response.standing,function(Index,Value){
 						
-						teams.push(Value);
+						Season.teams.push(Value);
 						if(Index==topn-1) return false;
 					})
 				
-					Season.teams = teams;
+				jSonData.push(Season);	
+				jSonHandler(jSonData);
 				});
-			jSonData.push(Season);
-	jSonHandler(jSonData);
 	}
 	
 }
