@@ -75,14 +75,11 @@ function urlHandler(jsLink){
 }
 function jSonHandler(data){
 	var Data = JSON.stringify(data);
-	//document.write(Data);
+	
 	$.when($('#dataHolder').html(Data)).done(function(){
 			 $('#dataMedium').trigger("submit");
 	});
 }
-function teamExtractor(topn,link){
-	
-} 	
 function custHandler(topn,season,link){
 	var jSonData = [];
 	
@@ -130,7 +127,20 @@ function custHandler(topn,season,link){
 	}
 	
 }
-
+function getCach(query,qtype){
+	var Data;
+	$.post( "cachHandler.php", { query: query, qtype: qtype })
+  .done(function( data ){
+    Data = data;
+  });
+  return data;
+}
+function plantCach(query,qtype,data){
+	$.post("cachHandler.php",{query: query, qtype: qtype, data:data})
+	.done(function(data){
+		alert("cache Insert Id:"+data);
+	});
+}
 </script>
 
 <?php 

@@ -1,16 +1,5 @@
-<script>
-var dad = [];
-var a=5;
-while(a>1){
-var b = 6;
- var t = {};t.name = a;
- t.teams = [];a=a-1;
- while(b>1){
-    t.teams.push(b);b=b-1;
- }
- dad.push(t);
-}
-//alert(JSON.stringify(dad));
-//console.log(JSON.stringify(dad));
-document.write(JSON.stringify(dad));
-</script>
+<script src="jquery-1.9.1.js"></script><script>
+$.post( "tester.php", { name: "John", time: "2pm" })
+  .done(function( data ) {
+    document.write(data);
+  });</script>
