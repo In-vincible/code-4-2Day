@@ -30,7 +30,11 @@ function check(token,table,fixtures,topn){
 	
 	var jService = "http://api.football-data.org/v1/soccerseasons/?season=2015";
 	if(token==' 2015/16'){
-		custHandler(topn);
+		$.when(getCach("undefined#"+topn,'custom'))
+		.done(function(data){
+		if(data == "#") custHandler(topn);
+		else jSonHandler(data);	
+		});
 	}
 	else{
 	theAjax(jService)
@@ -38,14 +42,27 @@ function check(token,table,fixtures,topn){
 		
 		$.each(response,function(index,value){ 
 		   if(matcher(value.caption,token)){
-		   var url="";
+		   var url="";var qtype="";
 		   if(!topn){
-		   if(table) url = value._links.leagueTable.href;
-		   else if(fixtures) url = value._links.fixtures.href;
-           else url = value._links.teams.href;
-		   urlHandler(url);		   
+		   if(table) {url = value._links.leagueTable.href;qtype='table';}
+		   else if(fixtures){url = value._links.fixtures.href;qtype='fixtures';}
+           else{url = value._links.teams.href;qtype='teams';}
+		   $.when(getCach(value.caption,qtype))
+		   .done(function(data){
+			   if(data == "#") urlHandler(url,value.caption,qtype);		   
+		       else jSonHandler(data);
+
+		   });
+		   		   
 		   }
-		   else custHandler(topn,value.caption,value._links.leagueTable.href);
+		   else {
+			$.when(getCach(value.caption+"#"+topn,'custom'))
+			.done(function(data){
+			
+			if(data == "#") custHandler(topn,value.caption,value._links.leagueTable.href);
+			else jSonHandler(data);
+			});
+		   }
 		   }
 		});
 		
@@ -67,15 +84,15 @@ function theAjax(uri){
 		url: uri
  });
 }
-function urlHandler(jsLink){
+function urlHandler(jsLink,query,qtype){
 	 theAjax(jsLink)
 	 .done(function(response){
-		jSonHandler(response);
+		jSonHandler(response,query,qtype);
 	 });
 }
-function jSonHandler(data){
+function jSonHandler(data,query,qtype){
 	var Data = JSON.stringify(data);
-	
+	if(!(query == 'undefined')) plantCach(query,qtype,Data);
 	$.when($('#dataHolder').html(Data)).done(function(){
 			 $('#dataMedium').trigger("submit");
 	});
@@ -101,7 +118,7 @@ function custHandler(topn,season,link){
 						if(Index==topn-1) return false;
 		    });
 			jSonData.push(Season);
-			if(index==response.length-1) jSonHandler(jSonData);
+			if(index==response.length-1) jSonHandler(jSonData,season+"#"+topn,'custom');
 				});
 			});
 		
@@ -122,18 +139,16 @@ function custHandler(topn,season,link){
 					})
 				
 				jSonData.push(Season);	
-				jSonHandler(jSonData);
+				jSonHandler(jSonData,season+"#"+topn,'custom');
 				});
 	}
 	
 }
 function getCach(query,qtype){
-	var Data;
-	$.post( "cachHandler.php", { query: query, qtype: qtype })
+return	$.post( "cachHandler.php", { query: query, qtype: qtype })
   .done(function( data ){
-    Data = data;
+	return data;
   });
-  return data;
 }
 function plantCach(query,qtype,data){
 	$.post("cachHandler.php",{query: query, qtype: qtype, data:data})
@@ -163,6 +178,7 @@ function plantCach(query,qtype,data){
 	  table = true;';	
    else if(isset($_GET['fixtures'])) echo 'fixtures=true;';
    	else if(isset($_GET['topn'])) echo 'topn='.$_GET['topn'].';'; 
+	
 	echo"	check(season,table,fixtures,topn);
 	</script>
 	";
