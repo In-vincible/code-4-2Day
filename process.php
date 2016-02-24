@@ -1,14 +1,9 @@
 <?php
 if(isset($_POST['data'])){ 
    $data = $_POST['data'];
-   //echo"level 2 crossed";
-   echo stripslashes($data);
+   // we are double stripping as slashes are added while passing data with form.
+   echo stripslashes(stripslashes($data));
 }
-else echo "bikram is the supreme truth!!!";
+else header("location:registration.php");
 
-/*
-if(isset($_GET['url'])){
-	$url = $_GET['url'];
-	header("location:$url");
-}*/
 ?>

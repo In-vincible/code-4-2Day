@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(isset($_SESSION['id'])){
+if(isset($_SESSION['id'])){//checking for session id
 	$user_id = $_SESSION['id'];
 	if($user_id){
 	
@@ -13,7 +13,7 @@ if(isset($_SESSION['id'])){
 	else{
 		echo"<font color='red'>Due some Unknown Error your Data couldn't be stored in database,<br> Please try again to register<a href='registration.php'>Click Here</a>to go to registration Page</font>";
 	}
-	session_destroy();
+	session_destroy();//destroying session so that welcome is shown only one time to a user.
 }
 
 else header("location:registration.php");

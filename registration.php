@@ -83,6 +83,7 @@ input.correct {
 
 </style>
 <script>
+//We are simply printing the length of fields so that user is aware of how much he has written
 function updatelength(field, output){
 
     curr_length = document.getElementById(field).value.length;
@@ -94,7 +95,7 @@ function updatelength(field, output){
     return 1;
 
 }
-
+//we are checking the strength of password by checking if it has lower case +1,if upper case again +1, etc, at last we judge strength with this point
 function check_v_pass(field, output) {
 
     pass_buf_value = document.getElementById(field).value;
@@ -154,7 +155,7 @@ function check_v_pass(field, output) {
     return 1;
 
 }
-
+//checking if password and confirmed password are same
 function compare_valid(field, field2) {
 
     fld_val = document.getElementById(field).value;
@@ -178,23 +179,24 @@ function compare_valid(field, field2) {
     return p_valid_r;
 
 }
+//checking if mail is valid
 function check_v_mail(field) {
 
     fld_value = document.getElementById(field).value;
 
     is_m_valid = 0;
 
-    if (fld_value.indexOf('@') >= 1) {
+    if (fld_value.indexOf('@') >= 1) {//checking if @ exists in mail
 
         m_valid_dom = fld_value.substr(fld_value.indexOf('@')+1);
 
         if (m_valid_dom.indexOf('@') == -1) {
 
-            if (m_valid_dom.indexOf('.') >= 1) {
+            if (m_valid_dom.indexOf('.') >= 1) {//checking if . exists in mail
 
                 m_valid_dom_e = m_valid_dom.substr(m_valid_dom.indexOf('.')+1);
 
-                if (m_valid_dom_e.length >= 1) {
+                if (m_valid_dom_e.length >= 1) {//cheching if . and @ are separated 
 
                     is_m_valid = 1;
 
@@ -223,7 +225,7 @@ function check_v_mail(field) {
     return m_valid_r;
 
 }
-function valid_length(field) {
+function valid_length(field) {//checking for length of fields
 
     length_df = document.getElementById(field).value.length;
 
@@ -245,7 +247,7 @@ function valid_length(field) {
 
 }
 
-function update_css_class(field, class_index) {
+function update_css_class(field, class_index) {//this function simply updates the css to show if credentiols are correct or incorrect
 
     if (class_index == 1) {
 
@@ -261,7 +263,7 @@ function update_css_class(field, class_index) {
     return 1;
 
 }
-function validate_all(output) {
+function validate_all(output) {//Now this is the mother function all functions above are called by this one. and it is called on submit
 
     t1 = valid_length('login');
 
