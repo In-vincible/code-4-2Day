@@ -65,5 +65,5 @@ Now the most exciting feature of api, you must have been wondering from where wi
 for that no need to bother yourself cause our api will worry about all that stuff, you just need to supply the
 season name what you know and api will take care of any typos or any other small mistakes which you might have
 done in writing the season name.<br>
-**Api automatically matches the season-names supplied by the user to the names we have and the most matched season is selected for data extraction.**
+**Api automatically matches the team/season-names supplied by the user to the names we have and the most matched team/season is selected for data extraction.**
 
