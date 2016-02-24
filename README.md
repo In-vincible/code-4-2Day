@@ -10,7 +10,9 @@ Users will be asked for registration if they don't supply key or supply wrong ke
 The Api is written mostly in javascript(including jQuery) and php.
 Almost everything in Api is more or less done using ajax calls so make sure the users have their javascript enabled.
 The Api depends on Football-data api for football data.
-The Api uses Fuzzy set code for search ratings.
+The Api uses Fuzzy set Api code for search ratings.
+All in all the api uses jquery which is also in open source world.
+
 
 ## Aim of Api
 This Api is designed for football enthusiasts who can code a little.
